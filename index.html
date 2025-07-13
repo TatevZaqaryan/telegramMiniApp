@@ -138,35 +138,7 @@
             font-size: 1rem;
             font-weight: bold;
         }
-        .view-order-bar {
-            background-color: #2C2C2C; /* Darker bar background */
-            padding: 15px 20px;
-            border-top: 1px solid #333;
-            position: sticky;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .view-order-btn {
-            background-color: #9333ea; /* Purple VIEW ORDER button */
-            color: white;
-            padding: 12px 25px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            width: 100%;
-            max-width: 300px; /* Limit button width */
-            transition: background-color 0.2s ease-in-out;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 5px 15px rgba(147, 51, 234, 0.3); /* Purple shadow */
-        }
-        .view-order-btn:hover {
-            background-color: #7e22ce; /* Darker purple */
-        }
+        /* Removed .view-order-bar and .view-order-btn styles as they are no longer needed */
         .message-box {
             position: fixed;
             top: 50%;
@@ -389,10 +361,7 @@
             </div>
         </div>
 
-        <!-- View Order Bar -->
-        <div class="view-order-bar">
-            <button id="view-order-btn" class="view-order-btn" disabled>VIEW ORDER</button>
-        </div>
+        <!-- Removed the local "VIEW ORDER" bar as Telegram's MainButton will be used -->
     </div>
 
     <!-- Message Box for alerts (for non-Telegram environments) -->
