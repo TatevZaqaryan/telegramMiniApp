@@ -9,8 +9,19 @@ const viewOrderBtn = document.getElementById('view-order-btn'); // Նոր VIEW O
 
 // Ֆունկցիա՝ հաղորդագրություն ցուցադրելու համար (օգտագործում է Telegram.WebApp.showAlert, եթե հասանելի է)
 function showMessageBox(message, duration = 2000) {
-    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.showAlert) {
-        window.Telegram.WebApp.showAlert(message);
+    const TelegramWebApp = window.Telegram.WebApp; // Ստանում ենք TelegramWebApp օբյեկտը
+    if (TelegramWebApp && TelegramWebApp.showAlert) {
+        try {
+            TelegramWebApp.showAlert(message);
+        } catch (e) {
+            // Եթե showAlert-ը չի աջակցվում կամ սխալ է առաջանում, օգտագործում ենք տեղական հաղորդագրության արկղը
+            console.warn("Telegram WebApp.showAlert failed, falling back to local message box:", e);
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, duration);
+        }
     } else {
         // Ցուցադրում է տեղական հաղորդագրության արկղ, եթե Telegram Web App SDK-ը հասանելի չէ
         messageBox.textContent = message;
@@ -58,15 +69,16 @@ function updateCartDisplay(cart) {
     }
 
     // Թարմացնում ենք Telegram-ի MainButton-ի տեսանելիությունը և վիճակը
-    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.MainButton) {
+    const TelegramWebApp = window.Telegram.WebApp;
+    if (TelegramWebApp && TelegramWebApp.MainButton) {
         if (totalItemsInCart > 0) {
-            window.Telegram.WebApp.MainButton.show();
-            window.Telegram.WebApp.MainButton.enable();
-            window.Telegram.WebApp.MainButton.setText(`VIEW ORDER (${totalItemsInCart} items - $${totalCartPrice.toFixed(2)})`);
+            TelegramWebApp.MainButton.show();
+            TelegramWebApp.MainButton.enable();
+            TelegramWebApp.MainButton.setText(`VIEW ORDER (${totalItemsInCart} items - $${totalCartPrice.toFixed(2)})`);
         } else {
-            window.Telegram.WebApp.MainButton.hide();
-            window.Telegram.WebApp.MainButton.disable();
-            window.Telegram.WebApp.MainButton.setText('VIEW ORDER');
+            TelegramWebApp.MainButton.hide();
+            TelegramWebApp.MainButton.disable();
+            TelegramWebApp.MainButton.setText('VIEW ORDER');
         }
     }
 }
@@ -79,8 +91,9 @@ function showConfirmationModal() {
 // Ֆունկցիա՝ հաստատման մոդալը թաքցնելու համար
 function hideConfirmationModal() {
     confirmationModal.classList.add('hidden');
-    if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.close(); // Փակում ենք Mini App-ը հաստատումից հետո
+    const TelegramWebApp = window.Telegram.WebApp;
+    if (TelegramWebApp && TelegramWebApp.close) {
+        TelegramWebApp.close(); // Փակում ենք Mini App-ը հաստատումից հետո
     }
 }
 
