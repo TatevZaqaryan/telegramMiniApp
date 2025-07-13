@@ -9,10 +9,11 @@ window.cart = cart; // Դարձնում ենք cart-ը գլոբալ, որպես�
 // Ստանում ենք անհրաժեշտ DOM էլեմենտները
 const menuItems = document.getElementById('menu-items');
 const cancelButton = document.getElementById('cancel-button'); // Cancel կոճակը հեդերում
-const placeOrderModalBtn = document.getElementById('place-order-modal-btn'); // Նոր պատվերի կոճակը մոդալում
-const customerNameInput = document.getElementById('customer-name');
-const customerPhoneInput = document.getElementById('customer-phone');
-const deliveryAddressInput = document.getElementById('delivery-address');
+// Այս էլեմենտները հայտարարվում են ui.js-ում և հասանելի են գլոբալ
+// const placeOrderModalBtn = document.getElementById('placeOrderModalBtn');
+// const customerNameInput = document.getElementById('customer-name');
+// const customerPhoneInput = document.getElementById('customer-phone');
+// const deliveryAddressInput = document.getElementById('delivery-address');
 
 
 // Ինիցիալիզացնում ենք Telegram Web App SDK-ը
@@ -92,56 +93,61 @@ if (cancelButton) {
 }
 
 // Իրադարձությունների լսիչ՝ պատվերի կոճակի համար մոդալում
-placeOrderModalBtn.addEventListener('click', () => {
-    if (Object.keys(cart).length === 0) {
-        showMessageBox("Զամբյուղը դատարկ է։ Խնդրում ենք ավելացնել ապրանքներ։");
-        return;
-    }
-
-    const customerName = customerNameInput.value.trim();
-    const customerPhone = customerPhoneInput.value.trim();
-    const deliveryAddress = deliveryAddressInput.value.trim();
-
-    if (!customerName || !customerPhone || !deliveryAddress) {
-        showMessageBox("Խնդրում ենք լրացնել առաքման բոլոր տվյալները։");
-        return;
-    }
-
-    // Պատրաստում ենք պատվերի տվյալները
-    const orderDetails = {
-        items: Object.values(cart).filter(item => item.quantity > 0),
-        totalPrice: Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2),
-        customerInfo: {
-            name: customerName,
-            phone: customerPhone,
-            address: deliveryAddress
+// placeOrderModalBtn-ը, customerNameInput-ը, customerPhoneInput-ը, deliveryAddressInput-ը
+// հայտարարված են ui.js-ում և հասանելի են գլոբալ
+if (typeof placeOrderModalBtn !== 'undefined' && placeOrderModalBtn !== null) {
+    placeOrderModalBtn.addEventListener('click', () => {
+        if (Object.keys(cart).length === 0) {
+            showMessageBox("Զամբյուղը դատարկ է։ Խնդրում ենք ավելացնել ապրանքներ։");
+            return;
         }
-    };
 
-    // Փոխարկում ենք պատվերի մանրամասները JSON տողի
-    const orderJson = JSON.stringify(orderDetails);
+        const customerName = customerNameInput.value.trim();
+        const customerPhone = customerPhoneInput.value.trim();
+        const deliveryAddress = deliveryAddressInput.value.trim();
 
-    if (TelegramWebApp && TelegramWebApp.sendData) {
-        TelegramWebApp.sendData(orderJson);
-        hideCartModal(); // Թաքցնում ենք զամբյուղի մոդալը
-        showConfirmationModal(); // Ցուցադրում ենք հաստատման մոդալը ui.js-ից
-        cart = {}; // Մաքրում ենք զամբյուղը
-        customerNameInput.value = '';
-        customerPhoneInput.value = '';
-        deliveryAddressInput.value = '';
-        updateCartDisplay(cart); // Թարմացնում ենք UI-ը ui.js-ից
-    } else {
-        showMessageBox("Պատվերը չկարողացավ ուղարկվել։ Telegram Web App SDK-ը հասանելի չէ։ (Սա սիմուլյացիա է)", 3000);
-        console.log("Simulated Order Data:", orderJson);
-        hideCartModal();
-        showConfirmationModal();
-        cart = {};
-        customerNameInput.value = '';
-        customerPhoneInput.value = '';
-        deliveryAddressInput.value = '';
-        updateCartDisplay(cart);
-    }
-});
+        if (!customerName || !customerPhone || !deliveryAddress) {
+            showMessageBox("Խնդրում ենք լրացնել առաքման բոլոր տվյալները։");
+            return;
+        }
+
+        // Պատրաստում ենք պատվերի տվյալները
+        const orderDetails = {
+            items: Object.values(cart).filter(item => item.quantity > 0),
+            totalPrice: Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2),
+            customerInfo: {
+                name: customerName,
+                phone: customerPhone,
+                address: deliveryAddress
+            }
+        };
+
+        // Փոխարկում ենք պատվերի մանրամասները JSON տողի
+        const orderJson = JSON.stringify(orderDetails);
+
+        if (TelegramWebApp && TelegramWebApp.sendData) {
+            TelegramWebApp.sendData(orderJson);
+            hideCartModal(); // Թաքցնում ենք զամբյուղի մոդալը
+            showConfirmationModal(); // Ցուցադրում ենք հաստատման մոդալը ui.js-ից
+            cart = {}; // Մաքրում ենք զամբյուղը
+            customerNameInput.value = '';
+            customerPhoneInput.value = '';
+            deliveryAddressInput.value = '';
+            updateCartDisplay(cart); // Թարմացնում ենք UI-ը ui.js-ից
+        } else {
+            showMessageBox("Պատվերը չկարողացավ ուղարկվել։ Telegram Web App SDK-ը հասանելի չէ։ (Սա սիմուլյացիա է)", 3000);
+            console.log("Simulated Order Data:", orderJson);
+            hideCartModal();
+            showConfirmationModal();
+            cart = {};
+            customerNameInput.value = '';
+            customerPhoneInput.value = '';
+            deliveryAddressInput.value = '';
+            updateCartDisplay(cart);
+        }
+    });
+}
+
 
 // Սկզբնական ցուցադրման թարմացում, երբ էջը բեռնվում է
 updateCartDisplay(cart);
