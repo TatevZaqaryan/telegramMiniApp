@@ -2,15 +2,10 @@
 
 // Ստանում ենք անհրաժեշտ DOM էլեմենտները
 const messageBox = document.getElementById('message-box');
-const cartItemsList = document.getElementById('cart-items-list');
-const totalPriceDisplay = document.getElementById('total-price');
-const emptyCartMessage = document.getElementById('empty-cart-message');
-const customerNameInput = document.getElementById('customer-name');
-const customerPhoneInput = document.getElementById('customer-phone');
-const deliveryAddressInput = document.getElementById('delivery-address');
 const confirmationModal = document.getElementById('confirmation-modal');
 const closeModalBtn = document.getElementById('close-modal-btn');
 const okModalBtn = document.getElementById('ok-modal-btn');
+const viewOrderBtn = document.getElementById('view-order-btn'); // Նոր VIEW ORDER կոճակ
 
 // Ֆունկցիա՝ հաղորդագրություն ցուցադրելու համար (օգտագործում է Telegram.WebApp.showAlert, եթե հասանելի է)
 function showMessageBox(message, duration = 2000) {
@@ -28,50 +23,51 @@ function showMessageBox(message, duration = 2000) {
 
 // Ֆունկցիա՝ զամբյուղի ցուցադրումը և ընդհանուր գումարը թարմացնելու համար
 function updateCartDisplay(cart) {
-    cartItemsList.innerHTML = ''; // Մաքրում ենք զամբյուղի ընթացիկ ցուցադրումը
-    let total = 0;
-    let hasItems = false;
+    let totalItemsInCart = 0;
+    let totalCartPrice = 0;
 
-    // Ցիկլով անցնում ենք զամբյուղի ապրանքների վրայով և դրանք ավելացնում UI-ին
-    for (const id in cart) {
-        const item = cart[id];
-        if (item.quantity > 0) {
-            hasItems = true;
-            total += item.price * item.quantity;
+    // Ցիկլով անցնում ենք բոլոր ապրանքների քարտերի վրայով
+    document.querySelectorAll('.item-card').forEach(card => {
+        const itemId = card.dataset.id;
+        const addBtn = card.querySelector('.add-btn');
+        const quantityControl = card.querySelector('.quantity-control');
+        const quantityDisplay = card.querySelector('.quantity-display');
 
-            const cartItemDiv = document.createElement('div');
-            cartItemDiv.className = 'cart-item';
-            cartItemDiv.innerHTML = `
-                <span class="text-gray-700 font-medium">${item.name}</span>
-                <div class="flex items-center quantity-control">
-                    <button data-id="${id}" data-action="decrease">-</button>
-                    <span class="mx-2 font-bold text-gray-800">${item.quantity}</span>
-                    <button data-id="${id}" data-action="increase">+</button>
-                </div>
-                <span class="text-gray-700 font-semibold">${(item.price * item.quantity).toLocaleString()} ֏</span>
-            `;
-            cartItemsList.appendChild(cartItemDiv);
+        if (cart[itemId] && cart[itemId].quantity > 0) {
+            // Եթե ապրանքը զամբյուղում է, ցուցադրում ենք քանակի կառավարումը
+            addBtn.classList.add('hidden');
+            quantityControl.classList.remove('hidden');
+            quantityDisplay.textContent = cart[itemId].quantity;
+            totalItemsInCart += cart[itemId].quantity;
+            totalCartPrice += cart[itemId].price * cart[itemId].quantity;
+        } else {
+            // Եթե ապրանքը զամբյուղում չէ, ցուցադրում ենք "ADD" կոճակը
+            addBtn.classList.remove('hidden');
+            quantityControl.classList.add('hidden');
+            quantityDisplay.textContent = '0'; // Reset quantity display
         }
-    }
+    });
 
-    totalPriceDisplay.textContent = `${total.toLocaleString()} ֏`; // Թարմացնում ենք ընդհանուր գումարը
-    emptyCartMessage.style.display = hasItems ? 'none' : 'block'; // Ցուցադրում/թաքցնում ենք "Զամբյուղը դատարկ է" հաղորդագրությունը
+    // Թարմացնում ենք VIEW ORDER կոճակի վիճակը
+    if (totalItemsInCart > 0) {
+        viewOrderBtn.disabled = false;
+        viewOrderBtn.textContent = `VIEW ORDER (${totalItemsInCart} items - $${totalCartPrice.toFixed(2)})`;
+    } else {
+        viewOrderBtn.disabled = true;
+        viewOrderBtn.textContent = 'VIEW ORDER';
+    }
 
     // Թարմացնում ենք Telegram-ի MainButton-ի տեսանելիությունը և վիճակը
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.MainButton) {
-        // Ստուգում ենք՝ արդյոք զամբյուղում կան ապրանքներ և առաքման բոլոր դաշտերը լրացված են
-        if (hasItems && customerNameInput.value && customerPhoneInput.value && deliveryAddressInput.value) {
+        if (totalItemsInCart > 0) {
             window.Telegram.WebApp.MainButton.show();
             window.Telegram.WebApp.MainButton.enable();
+            window.Telegram.WebApp.MainButton.setText(`VIEW ORDER (${totalItemsInCart} items - $${totalCartPrice.toFixed(2)})`);
         } else {
-            window.Telegram.WebApp.MainButton.hide(); // Թաքցնում ենք, եթե պատրաստ չէ
-            window.Telegram.WebApp.MainButton.disable(); // Անջատում ենք, եթե պատրաստ չէ
+            window.Telegram.WebApp.MainButton.hide();
+            window.Telegram.WebApp.MainButton.disable();
+            window.Telegram.WebApp.MainButton.setText('VIEW ORDER');
         }
-        window.Telegram.WebApp.MainButton.setText(`Կատարել Պատվեր (${total.toLocaleString()} ֏)`);
-    } else {
-        // Անկախ ռեժիմի համար, կառավարում ենք տեղական կոճակը
-        const placeOrderBtn = document.getElementById('place-order-btn');
-        placeOrderBtn.disabled = !(hasItems && customerNameInput.value && customerPhoneInput.value && deliveryAddressInput.value);
     }
 }
 
@@ -93,8 +89,4 @@ closeModalBtn.addEventListener('click', hideConfirmationModal);
 okModalBtn.addEventListener('click', hideConfirmationModal);
 
 // Էքսպորտ ենք անում ֆունկցիաները, որպեսզի դրանք հասանելի լինեն main.js-ում
-// Քանի որ մենք չենք օգտագործում մոդուլային համակարգ (օրինակ՝ import/export),
-// այս ֆունկցիաները գլոբալ կլինեն, եթե ui.js-ը ներառվի main.js-ից առաջ։
-// Որպես այլընտրանք, կարող ենք դրանք ուղղակիորեն վերագրել window օբյեկտին։
 // Այս դեպքում, քանի որ ui.js-ը ներառվում է main.js-ից առաջ, դրանք հասանելի կլինեն։
-// Ուղղակիորեն DOM էլեմենտներին մուտք գործելու համար դրանք պետք է լինեն այս ֆայլում։

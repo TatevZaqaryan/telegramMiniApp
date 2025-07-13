@@ -3,109 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Արագ Սնունդ Առաքում</title>
+    <title>Durger King</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Light gray background */
-            color: #333;
+            background-color: #0088CC; /* Telegram blue background */
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: flex-start; /* Align to top for scrolling content */
             min-height: 100vh;
-            padding: 20px;
+            padding: 0; /* Remove body padding for full-width app */
             box-sizing: border-box;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
-        .container {
+        .app-container {
             width: 100%;
-            max-width: 600px;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 450px; /* Max width to resemble phone screen */
+            background-color: #1A1A1A; /* Dark background for the app */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure it takes full height */
+        }
+        .header {
+            background-color: #2C2C2C; /* Darker header */
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .header .cancel-btn {
+            color: #0088CC; /* Telegram blue for cancel */
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .header .title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .header .dots {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Responsive grid */
+            gap: 15px;
             padding: 20px;
-            box-sizing: border-box;
+            flex-grow: 1; /* Allow menu to take available space */
+            overflow-y: auto; /* Enable scrolling for menu items */
         }
         .item-card {
+            background-color: #2C2C2C; /* Darker card background */
+            border-radius: 12px;
+            padding: 10px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: #f9fafb;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease-in-out;
+            position: relative; /* For quantity control positioning */
         }
         .item-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
         .item-image {
             width: 80px;
             height: 80px;
             border-radius: 8px;
             object-fit: cover;
-            margin-right: 15px;
-            border: 1px solid #e5e7eb;
+            margin-bottom: 8px;
+            border: 1px solid #3A3A3A;
         }
-        .add-to-cart-btn {
-            background-color: #2563eb; /* Blue */
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
+        .item-name {
+            font-size: 0.95rem;
             font-weight: 600;
-            transition: background-color 0.2s ease-in-out;
+            color: #E0E0E0;
+            margin-bottom: 4px;
+        }
+        .item-price {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #10B981; /* Green price */
+            margin-bottom: 8px;
+        }
+        .add-btn, .quantity-control {
+            width: 100%;
+            padding: 8px 0;
+            border-radius: 8px;
+            font-weight: 700;
             cursor: pointer;
             border: none;
+            transition: background-color 0.2s ease-in-out;
         }
-        .add-to-cart-btn:hover {
-            background-color: #1d4ed8; /* Darker blue */
+        .add-btn {
+            background-color: #9333ea; /* Purple ADD button */
+            color: white;
         }
-        .cart-item {
+        .add-btn:hover {
+            background-color: #7e22ce; /* Darker purple */
+        }
+        .quantity-control {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px dashed #e5e7eb;
-        }
-        .cart-item:last-child {
-            border-bottom: none;
+            background-color: #9333ea; /* Purple for quantity control */
+            color: white;
         }
         .quantity-control button {
-            background-color: #e0e7ff; /* Light blue */
-            color: #2563eb;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-flex;
+            background-color: transparent;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 0 12px;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+        .quantity-control span {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .view-order-bar {
+            background-color: #2C2C2C; /* Darker bar background */
+            padding: 15px 20px;
+            border-top: 1px solid #333;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            margin: 0 5px;
-            transition: background-color 0.2s;
         }
-        .quantity-control button:hover {
-            background-color: #c7d2fe;
-        }
-        .place-order-btn {
-            background-color: #10b981; /* Green */
+        .view-order-btn {
+            background-color: #9333ea; /* Purple VIEW ORDER button */
             color: white;
             padding: 12px 25px;
             border-radius: 10px;
             font-weight: 700;
             font-size: 1.1rem;
             width: 100%;
+            max-width: 300px; /* Limit button width */
             transition: background-color 0.2s ease-in-out;
             cursor: pointer;
             border: none;
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 5px 15px rgba(147, 51, 234, 0.3); /* Purple shadow */
         }
-        .place-order-btn:hover {
-            background-color: #059669; /* Darker green */
+        .view-order-btn:hover {
+            background-color: #7e22ce; /* Darker purple */
         }
         .message-box {
             position: fixed;
@@ -129,17 +189,18 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.4);
+            background-color: rgba(0,0,0,0.6); /* Darker overlay */
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .modal-content {
-            background-color: #fefefe;
+            background-color: #2C2C2C; /* Dark modal background */
+            color: #E0E0E0;
             margin: auto;
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
             width: 90%;
             max-width: 400px;
             text-align: center;
@@ -152,7 +213,7 @@
         }
         .close-button:hover,
         .close-button:focus {
-            color: black;
+            color: white;
             text-decoration: none;
             cursor: pointer;
         }
@@ -161,90 +222,177 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-3xl font-bold text-center mb-6 text-indigo-700">Արագ Սնունդ Առաքում</h1>
+    <div class="app-container">
+        <!-- Header Section -->
+        <div class="header">
+            <span class="cancel-btn" id="cancel-button">Cancel</span>
+            <div class="title">Durger King <span class="text-xs text-gray-400">Bot</span></div>
+            <span class="dots">...</span>
+        </div>
 
-        <!-- Menu Section -->
-        <div id="menu-items" class="mb-8">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Մեր Մենյուն</h2>
-
-            <!-- Item 1: Բուրգեր -->
-            <div class="item-card">
-                <img src="https://placehold.co/80x80/FFD700/000000?text=Բուրգեր" alt="Բուրգեր" class="item-image">
-                <div class="flex-grow">
-                    <h3 class="text-lg font-semibold text-gray-900">Բուրգեր</h3>
-                    <p class="text-gray-600 text-sm">Համեղ բուրգեր՝ թարմ բանջարեղենով։</p>
-                    <p class="text-xl font-bold text-green-600 mt-1">1500 ֏</p>
+        <!-- Menu Grid Section -->
+        <div id="menu-items" class="menu-grid">
+            <!-- Item 1: Burger -->
+            <div class="item-card" data-id="burger" data-name="Burger" data-price="4.99">
+                <img src="https://placehold.co/80x80/FFD700/000000?text=Burger" alt="Burger" class="item-image">
+                <span class="item-name">Burger</span>
+                <span class="item-price">$4.99</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
                 </div>
-                <button class="add-to-cart-btn" data-id="burger" data-name="Բուրգեր" data-price="1500">Ավելացնել</button>
             </div>
 
-            <!-- Item 2: Պիցցա -->
-            <div class="item-card">
-                <img src="https://placehold.co/80x80/FF6347/000000?text=Պիցցա" alt="Պիցցա" class="item-image">
-                <div class="flex-grow">
-                    <h3 class="text-lg font-semibold text-gray-900">Պիցցա</h3>
-                    <p class="text-gray-600 text-sm">Մեծ պիցցա՝ պանրով և պեպերոնիով։</p>
-                    <p class="text-xl font-bold text-green-600 mt-1">3500 ֏</p>
+            <!-- Item 2: Fries -->
+            <div class="item-card" data-id="fries" data-name="Fries" data-price="1.49">
+                <img src="https://placehold.co/80x80/FF6347/000000?text=Fries" alt="Fries" class="item-image">
+                <span class="item-name">Fries</span>
+                <span class="item-price">$1.49</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
                 </div>
-                <button class="add-to-cart-btn" data-id="pizza" data-name="Պիցցա" data-price="3500">Ավելացնել</button>
             </div>
 
-            <!-- Item 3: Ֆրի -->
-            <div class="item-card">
-                <img src="https://placehold.co/80x80/ADD8E6/000000?text=Ֆրի" alt="Ֆրի" class="item-image">
-                <div class="flex-grow">
-                    <h3 class="text-lg font-semibold text-gray-900">Ֆրի</h3>
-                    <p class="text-gray-600 text-sm">Թարմ տապակած կարտոֆիլ։</p>
-                    <p class="text-xl font-bold text-green-600 mt-1">800 ֏</p>
+            <!-- Item 3: Hotdog -->
+            <div class="item-card" data-id="hotdog" data-name="Hotdog" data-price="3.49">
+                <img src="https://placehold.co/80x80/ADD8E6/000000?text=Hotdog" alt="Hotdog" class="item-image">
+                <span class="item-name">Hotdog</span>
+                <span class="item-price">$3.49</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
                 </div>
-                <button class="add-to-cart-btn" data-id="fries" data-name="Ֆրի" data-price="800">Ավելացնել</button>
             </div>
 
-            <!-- Item 4: Կոլա -->
-            <div class="item-card">
-                <img src="https://placehold.co/80x80/C0C0C0/000000?text=Կոլա" alt="Կոլա" class="item-image">
-                <div class="flex-grow">
-                    <h3 class="text-lg font-semibold text-gray-900">Կոլա</h3>
-                    <p class="text-gray-600 text-sm">Զովացուցիչ ըմպելիք։</p>
-                    <p class="text-xl font-bold text-green-600 mt-1">500 ֏</p>
+            <!-- Item 4: Taco -->
+            <div class="item-card" data-id="taco" data-name="Taco" data-price="3.99">
+                <img src="https://placehold.co/80x80/C0C0C0/000000?text=Taco" alt="Taco" class="item-image">
+                <span class="item-name">Taco</span>
+                <span class="item-price">$3.99</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
                 </div>
-                <button class="add-to-cart-btn" data-id="cola" data-name="Կոլա" data-price="500">Ավելացնել</button>
+            </div>
+
+            <!-- Item 5: Pizza -->
+            <div class="item-card" data-id="pizza" data-name="Pizza" data-price="7.99">
+                <img src="https://placehold.co/80x80/FFD700/000000?text=Pizza" alt="Pizza" class="item-image">
+                <span class="item-name">Pizza</span>
+                <span class="item-price">$7.99</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
+                </div>
+            </div>
+
+            <!-- Item 6: Donut -->
+            <div class="item-card" data-id="donut" data-name="Donut" data-price="1.49">
+                <img src="https://placehold.co/80x80/FF6347/000000?text=Donut" alt="Donut" class="item-image">
+                <span class="item-name">Donut</span>
+                <span class="item-price">$1.49</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
+                </div>
+            </div>
+
+            <!-- Item 7: Popcorn -->
+            <div class="item-card" data-id="popcorn" data-name="Popcorn" data-price="1.99">
+                <img src="https://placehold.co/80x80/ADD8E6/000000?text=Popcorn" alt="Popcorn" class="item-image">
+                <span class="item-name">Popcorn</span>
+                <span class="item-price">$1.99</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
+                </div>
+            </div>
+
+            <!-- Item 8: Coke -->
+            <div class="item-card" data-id="coke" data-name="Coke" data-price="1.49">
+                <img src="https://placehold.co/80x80/C0C0C0/000000?text=Coke" alt="Coke" class="item-image">
+                <span class="item-name">Coke</span>
+                <span class="item-price">$1.49</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
+                </div>
+            </div>
+
+            <!-- Item 9: Cake -->
+            <div class="item-card" data-id="cake" data-name="Cake" data-price="10.99">
+                <img src="https://placehold.co/80x80/FFD700/000000?text=Cake" alt="Cake" class="item-image">
+                <span class="item-name">Cake</span>
+                <span class="item-price">$10.99</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
+                </div>
+            </div>
+
+            <!-- Item 10: Icecream -->
+            <div class="item-card" data-id="icecream" data-name="Icecream" data-price="5.99">
+                <img src="https://placehold.co/80x80/FF6347/000000?text=Icecream" alt="Icecream" class="item-image">
+                <span class="item-name">Icecream</span>
+                <span class="item-price">$5.99</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
+                </div>
+            </div>
+
+            <!-- Item 11: Cookie -->
+            <div class="item-card" data-id="cookie" data-name="Cookie" data-price="3.99">
+                <img src="https://placehold.co/80x80/ADD8E6/000000?text=Cookie" alt="Cookie" class="item-image">
+                <span class="item-name">Cookie</span>
+                <span class="item-price">$3.99</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
+                </div>
+            </div>
+
+            <!-- Item 12: Flan -->
+            <div class="item-card" data-id="flan" data-name="Flan" data-price="7.99">
+                <img src="https://placehold.co/80x80/C0C0C0/000000?text=Flan" alt="Flan" class="item-image">
+                <span class="item-name">Flan</span>
+                <span class="item-price">$7.99</span>
+                <button class="add-btn add-to-cart-btn">ADD</button>
+                <div class="quantity-control hidden">
+                    <button data-action="decrease">-</button>
+                    <span class="quantity-display">0</span>
+                    <button data-action="increase">+</button>
+                </div>
             </div>
         </div>
 
-        <!-- Cart Section -->
-        <div id="cart-section" class="mb-8 p-5 bg-blue-50 rounded-lg shadow-inner">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Ձեր Զամբյուղը</h2>
-            <div id="cart-items-list">
-                <!-- Cart items will be dynamically added here -->
-                <p class="text-gray-500 text-center" id="empty-cart-message">Զամբյուղը դատարկ է։</p>
-            </div>
-            <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
-                <span class="text-xl font-bold text-gray-900">Ընդհանուր:</span>
-                <span class="text-2xl font-bold text-indigo-700" id="total-price">0 ֏</span>
-            </div>
+        <!-- View Order Bar -->
+        <div class="view-order-bar">
+            <button id="view-order-btn" class="view-order-btn" disabled>VIEW ORDER</button>
         </div>
-
-        <!-- Delivery Details Section -->
-        <div id="delivery-details-section" class="mb-8 p-5 bg-yellow-50 rounded-lg shadow-inner">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Առաքման Տվյալներ</h2>
-            <div class="mb-4">
-                <label for="customer-name" class="block text-gray-700 text-sm font-bold mb-2">Անուն Ազգանուն:</label>
-                <input type="text" id="customer-name" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Մուտքագրեք Ձեր անունը">
-            </div>
-            <div class="mb-4">
-                <label for="customer-phone" class="block text-gray-700 text-sm font-bold mb-2">Հեռախոսահամար:</label>
-                <input type="tel" id="customer-phone" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Օրինակ՝ +374xxYYYYYY">
-            </div>
-            <div class="mb-4">
-                <label for="delivery-address" class="block text-gray-700 text-sm font-bold mb-2">Առաքման Հասցե:</label>
-                <textarea id="delivery-address" rows="3" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Մուտքագրեք Ձեր հասցեն"></textarea>
-            </div>
-        </div>
-
-        <!-- Place Order Button -->
-        <button id="place-order-btn" class="place-order-btn" disabled>Կատարել Պատվեր</button>
     </div>
 
     <!-- Message Box for alerts (for non-Telegram environments) -->
@@ -256,12 +404,10 @@
             <span class="close-button" id="close-modal-btn">&times;</span>
             <h2 class="text-2xl font-bold text-green-600 mb-4">Պատվերը Հաստատված է։</h2>
             <p class="text-gray-700 mb-4">Շնորհակալություն Ձեր պատվերի համար։ Մենք շուտով կկապվենք Ձեզ հետ՝ մանրամասները հաստատելու համար։</p>
-            <button id="ok-modal-btn" class="add-to-cart-btn mt-4">Լավ</button>
+            <button id="ok-modal-btn" class="add-btn mt-4">Լավ</button>
         </div>
     </div>
 
-    <!-- Telegram Web App SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- Custom JavaScript files -->
     <script src="ui.js"></script>
     <script src="main.js"></script>
