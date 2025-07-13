@@ -1,12 +1,15 @@
 // main.js - Հիմնական հավելվածի տրամաբանություն և իրադարձությունների լսիչներ
 
+console.log("main.js script started."); // Ավելացվել է այս տողը՝ սկրիպտի բեռնումը ստուգելու համար
+
 // Գլոբալ փոփոխական՝ զամբյուղի համար
 let cart = {}; // Պահում է զամբյուղի ապրանքները: { itemId: { name, price, quantity } }
 
 // Ստանում ենք անհրաժեշտ DOM էլեմենտները
+// Այս էլեմենտները հայտարարվում են ui.js-ում և հասանելի են գլոբալ
 const menuItems = document.getElementById('menu-items');
-const viewOrderBtn = document.getElementById('view-order-btn'); // Նոր VIEW ORDER կոճակ
 const cancelButton = document.getElementById('cancel-button'); // Cancel կոճակը հեդերում
+// viewOrderBtn-ը հայտարարված է ui.js-ում, այստեղ այն ուղղակիորեն օգտագործվում է
 
 // Ինիցիալիզացնում ենք Telegram Web App SDK-ը
 const TelegramWebApp = window.Telegram.WebApp;
@@ -77,22 +80,27 @@ menuItems.addEventListener('click', (event) => {
 });
 
 // Իրադարձությունների լսիչ՝ VIEW ORDER կոճակի համար (անկախ ռեժիմի համար)
-viewOrderBtn.addEventListener('click', () => {
-    if (Object.keys(cart).length > 0) {
-        const orderDetails = {
-            items: Object.values(cart).filter(item => item.quantity > 0),
-            totalPrice: Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)
-        };
-        showMessageBox(`Ձեր պատվերը պատրաստ է։ Ընդհանուր՝ $${orderDetails.totalPrice}։ (Սիմուլյացիա)`);
-        console.log("Simulated Order Data:", orderDetails);
-        // Այստեղ կարող է լինել պատվերի հաստատման մոդալի ցուցադրում
-        showConfirmationModal();
-        cart = {}; // Մաքրում ենք զամբյուղը
-        updateCartDisplay(cart);
-    } else {
-        showMessageBox("Զամբյուղը դատարկ է։ Խնդրում ենք ավելացնել ապրանքներ։");
-    }
-});
+// Այս կոճակը հայտարարված է ui.js-ում որպես viewOrderBtn
+// Ուղղակիորեն մուտք ենք գործում գլոբալ փոփոխականին
+if (typeof viewOrderBtn !== 'undefined' && viewOrderBtn !== null) { // Ստուգում ենք՝ արդյոք հայտարարված է ui.js-ում
+    viewOrderBtn.addEventListener('click', () => {
+        if (Object.keys(cart).length > 0) {
+            const orderDetails = {
+                items: Object.values(cart).filter(item => item.quantity > 0),
+                totalPrice: Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)
+            };
+            showMessageBox(`Ձեր պատվերը պատրաստ է։ Ընդհանուր՝ $${orderDetails.totalPrice}։ (Սիմուլյացիա)`);
+            console.log("Simulated Order Data:", orderDetails);
+            // Այստեղ կարող է լինել պատվերի հաստատման մոդալի ցուցադրում
+            showConfirmationModal();
+            cart = {}; // Մաքրում ենք զամբյուղը
+            updateCartDisplay(cart);
+        } else {
+            showMessageBox("Զամբյուղը դատարկ է։ Խնդրում ենք ավելացնել ապրանքներ։");
+        }
+    });
+}
+
 
 // Իրադարձությունների լսիչ՝ Cancel կոճակի համար
 if (cancelButton) {
