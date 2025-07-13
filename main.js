@@ -20,7 +20,8 @@ if (TelegramWebApp) {
     TelegramWebApp.MainButton.onClick(function() {
         placeOrder(); // Գործարկում ենք պատվերի տրամաբանությունը, երբ MainButton-ը սեղմվում է
     });
-    TelegramWebApp.MainButton.hide(); // Սկզբում թաքցնում ենք հիմնական կոճակը, մենք կկառավարենք այն
+    TelegramWebApp.MainButton.show(); // Այս տողը ավելացվել է՝ կոճակը միշտ ցուցադրելու համար
+    // MainButton-ի վիճակը (ակտիվ/ապաակտիվ) կկառավարվի updateCartDisplay ֆունկցիայի միջոցով
 } else {
     console.warn("Telegram Web App SDK not found. Running in standalone mode.");
 }
