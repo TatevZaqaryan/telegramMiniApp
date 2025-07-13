@@ -120,6 +120,42 @@
             z-index: 1000;
             display: none; /* Hidden by default */
         }
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -190,149 +226,44 @@
             </div>
         </div>
 
+        <!-- Delivery Details Section -->
+        <div id="delivery-details-section" class="mb-8 p-5 bg-yellow-50 rounded-lg shadow-inner">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Առաքման Տվյալներ</h2>
+            <div class="mb-4">
+                <label for="customer-name" class="block text-gray-700 text-sm font-bold mb-2">Անուն Ազգանուն:</label>
+                <input type="text" id="customer-name" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Մուտքագրեք Ձեր անունը">
+            </div>
+            <div class="mb-4">
+                <label for="customer-phone" class="block text-gray-700 text-sm font-bold mb-2">Հեռախոսահամար:</label>
+                <input type="tel" id="customer-phone" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Օրինակ՝ +374xxYYYYYY">
+            </div>
+            <div class="mb-4">
+                <label for="delivery-address" class="block text-gray-700 text-sm font-bold mb-2">Առաքման Հասցե:</label>
+                <textarea id="delivery-address" rows="3" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Մուտքագրեք Ձեր հասցեն"></textarea>
+            </div>
+        </div>
+
         <!-- Place Order Button -->
         <button id="place-order-btn" class="place-order-btn" disabled>Կատարել Պատվեր</button>
     </div>
 
-    <!-- Message Box for alerts -->
+    <!-- Message Box for alerts (for non-Telegram environments) -->
     <div id="message-box" class="message-box"></div>
 
-    <script>
-        // Initialize Telegram Web App
-        const TelegramWebApp = window.Telegram.WebApp;
-        if (TelegramWebApp) {
-            TelegramWebApp.ready();
-            TelegramWebApp.expand(); // Expand the Mini App to full screen
-        } else {
-            console.warn("Telegram Web App SDK not found. Running in standalone mode.");
-        }
+    <!-- Order Confirmation Modal -->
+    <div id="confirmation-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="close-modal-btn">&times;</span>
+            <h2 class="text-2xl font-bold text-green-600 mb-4">Պատվերը Հաստատված է։</h2>
+            <p class="text-gray-700 mb-4">Շնորհակալություն Ձեր պատվերի համար։ Մենք շուտով կկապվենք Ձեզ հետ՝ մանրամասները հաստատելու համար։</p>
+            <button id="ok-modal-btn" class="add-to-cart-btn mt-4">Լավ</button>
+        </div>
+    </div>
 
-        const menuItems = document.getElementById('menu-items');
-        const cartItemsList = document.getElementById('cart-items-list');
-        const totalPriceDisplay = document.getElementById('total-price');
-        const placeOrderBtn = document.getElementById('place-order-btn');
-        const emptyCartMessage = document.getElementById('empty-cart-message');
-        const messageBox = document.getElementById('message-box');
-
-        let cart = {}; // Stores items in the cart: { itemId: { name, price, quantity } }
-
-        // Function to show a custom message box
-        function showMessageBox(message, duration = 2000) {
-            messageBox.textContent = message;
-            messageBox.style.display = 'block';
-            setTimeout(() => {
-                messageBox.style.display = 'none';
-            }, duration);
-        }
-
-        // Function to update the cart display and total price
-        function updateCartDisplay() {
-            cartItemsList.innerHTML = ''; // Clear current cart display
-            let total = 0;
-            let hasItems = false;
-
-            for (const id in cart) {
-                const item = cart[id];
-                if (item.quantity > 0) {
-                    hasItems = true;
-                    total += item.price * item.quantity;
-
-                    const cartItemDiv = document.createElement('div');
-                    cartItemDiv.className = 'cart-item';
-                    cartItemDiv.innerHTML = `
-                        <span class="text-gray-700 font-medium">${item.name}</span>
-                        <div class="flex items-center quantity-control">
-                            <button data-id="${id}" data-action="decrease">-</button>
-                            <span class="mx-2 font-bold text-gray-800">${item.quantity}</span>
-                            <button data-id="${id}" data-action="increase">+</button>
-                        </div>
-                        <span class="text-gray-700 font-semibold">${(item.price * item.quantity).toLocaleString()} ֏</span>
-                    `;
-                    cartItemsList.appendChild(cartItemDiv);
-                }
-            }
-
-            totalPriceDisplay.textContent = `${total.toLocaleString()} ֏`;
-            placeOrderBtn.disabled = !hasItems; // Enable/disable order button based on cart content
-            emptyCartMessage.style.display = hasItems ? 'none' : 'block'; // Show/hide empty message
-        }
-
-        // Event listener for adding items to cart
-        menuItems.addEventListener('click', (event) => {
-            const button = event.target.closest('.add-to-cart-btn');
-            if (button) {
-                const id = button.dataset.id;
-                const name = button.dataset.name;
-                const price = parseInt(button.dataset.price);
-
-                if (cart[id]) {
-                    cart[id].quantity++;
-                } else {
-                    cart[id] = { name, price, quantity: 1 };
-                }
-                updateCartDisplay();
-                showMessageBox(`${name} ավելացվեց զամբյուղում։`);
-            }
-        });
-
-        // Event listener for quantity control in cart
-        cartItemsList.addEventListener('click', (event) => {
-            const button = event.target.closest('button');
-            if (button) {
-                const id = button.dataset.id;
-                const action = button.dataset.action;
-
-                if (cart[id]) {
-                    if (action === 'increase') {
-                        cart[id].quantity++;
-                    } else if (action === 'decrease') {
-                        cart[id].quantity--;
-                        if (cart[id].quantity <= 0) {
-                            delete cart[id]; // Remove item if quantity drops to 0 or less
-                        }
-                    }
-                    updateCartDisplay();
-                }
-            }
-        });
-
-        // Event listener for placing the order
-        placeOrderBtn.addEventListener('click', () => {
-            if (Object.keys(cart).length === 0) {
-                showMessageBox("Զամբյուղը դատարկ է։ Խնդրում ենք ավելացնել ապրանքներ։");
-                return;
-            }
-
-            // Prepare order data
-            const orderDetails = {
-                items: Object.values(cart).filter(item => item.quantity > 0), // Only include items with quantity > 0
-                totalPrice: parseFloat(totalPriceDisplay.textContent.replace(' ֏', '').replace(/,/g, '')),
-                // In a real app, you'd also collect user address, phone, etc.
-                // For this example, we'll simulate sending data to the bot.
-            };
-
-            // Convert orderDetails to a JSON string
-            const orderJson = JSON.stringify(orderDetails);
-
-            if (TelegramWebApp && TelegramWebApp.sendData) {
-                TelegramWebApp.sendData(orderJson);
-                showMessageBox("Պատվերը հաջողությամբ ուղարկվեց։ Շնորհակալություն։");
-                // Optionally, clear the cart after sending the order
-                cart = {};
-                updateCartDisplay();
-                // Close the Mini App after a short delay
-                setTimeout(() => {
-                    TelegramWebApp.close();
-                }, 2000);
-            } else {
-                showMessageBox("Պատվերը չկարողացավ ուղարկվել։ Telegram Web App SDK-ը հասանելի չէ։ (Սա սիմուլյացիա է)", 3000);
-                console.log("Simulated Order Data:", orderJson);
-                // In a standalone environment, you might redirect to a confirmation page or show a modal
-            }
-        });
-
-        // Initial display update
-        updateCartDisplay();
-    </script>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Custom JavaScript files -->
+    <script src="ui.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
