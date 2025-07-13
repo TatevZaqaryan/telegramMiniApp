@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Արագ Սնունդ Առաքում</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for scrolling content */
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .item-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9fafb;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        .item-card:hover {
+            transform: translateY(-3px);
+        }
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+            border: 1px solid #e5e7eb;
+        }
+        .add-to-cart-btn {
+            background-color: #2563eb; /* Blue */
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+            cursor: pointer;
+            border: none;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #1d4ed8; /* Darker blue */
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #e5e7eb;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        .quantity-control button {
+            background-color: #e0e7ff; /* Light blue */
+            color: #2563eb;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            margin: 0 5px;
+            transition: background-color 0.2s;
+        }
+        .quantity-control button:hover {
+            background-color: #c7d2fe;
+        }
+        .place-order-btn {
+            background-color: #10b981; /* Green */
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: background-color 0.2s ease-in-out;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+        .place-order-btn:hover {
+            background-color: #059669; /* Darker green */
+        }
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            display: none; /* Hidden by default */
+        }
+    </style>
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center mb-6 text-indigo-700">Արագ Սնունդ Առաքում</h1>
+
+        <!-- Menu Section -->
+        <div id="menu-items" class="mb-8">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Մեր Մենյուն</h2>
+
+            <!-- Item 1: Բուրգեր -->
+            <div class="item-card">
+                <img src="https://placehold.co/80x80/FFD700/000000?text=Բուրգեր" alt="Բուրգեր" class="item-image">
+                <div class="flex-grow">
+                    <h3 class="text-lg font-semibold text-gray-900">Բուրգեր</h3>
+                    <p class="text-gray-600 text-sm">Համեղ բուրգեր՝ թարմ բանջարեղենով։</p>
+                    <p class="text-xl font-bold text-green-600 mt-1">1500 ֏</p>
+                </div>
+                <button class="add-to-cart-btn" data-id="burger" data-name="Բուրգեր" data-price="1500">Ավելացնել</button>
+            </div>
+
+            <!-- Item 2: Պիցցա -->
+            <div class="item-card">
+                <img src="https://placehold.co/80x80/FF6347/000000?text=Պիցցա" alt="Պիցցա" class="item-image">
+                <div class="flex-grow">
+                    <h3 class="text-lg font-semibold text-gray-900">Պիցցա</h3>
+                    <p class="text-gray-600 text-sm">Մեծ պիցցա՝ պանրով և պեպերոնիով։</p>
+                    <p class="text-xl font-bold text-green-600 mt-1">3500 ֏</p>
+                </div>
+                <button class="add-to-cart-btn" data-id="pizza" data-name="Պիցցա" data-price="3500">Ավելացնել</button>
+            </div>
+
+            <!-- Item 3: Ֆրի -->
+            <div class="item-card">
+                <img src="https://placehold.co/80x80/ADD8E6/000000?text=Ֆրի" alt="Ֆրի" class="item-image">
+                <div class="flex-grow">
+                    <h3 class="text-lg font-semibold text-gray-900">Ֆրի</h3>
+                    <p class="text-gray-600 text-sm">Թարմ տապակած կարտոֆիլ։</p>
+                    <p class="text-xl font-bold text-green-600 mt-1">800 ֏</p>
+                </div>
+                <button class="add-to-cart-btn" data-id="fries" data-name="Ֆրի" data-price="800">Ավելացնել</button>
+            </div>
+
+            <!-- Item 4: Կոլա -->
+            <div class="item-card">
+                <img src="https://placehold.co/80x80/C0C0C0/000000?text=Կոլա" alt="Կոլա" class="item-image">
+                <div class="flex-grow">
+                    <h3 class="text-lg font-semibold text-gray-900">Կոլա</h3>
+                    <p class="text-gray-600 text-sm">Զովացուցիչ ըմպելիք։</p>
+                    <p class="text-xl font-bold text-green-600 mt-1">500 ֏</p>
+                </div>
+                <button class="add-to-cart-btn" data-id="cola" data-name="Կոլա" data-price="500">Ավելացնել</button>
+            </div>
+        </div>
+
+        <!-- Cart Section -->
+        <div id="cart-section" class="mb-8 p-5 bg-blue-50 rounded-lg shadow-inner">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Ձեր Զամբյուղը</h2>
+            <div id="cart-items-list">
+                <!-- Cart items will be dynamically added here -->
+                <p class="text-gray-500 text-center" id="empty-cart-message">Զամբյուղը դատարկ է։</p>
+            </div>
+            <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
+                <span class="text-xl font-bold text-gray-900">Ընդհանուր:</span>
+                <span class="text-2xl font-bold text-indigo-700" id="total-price">0 ֏</span>
+            </div>
+        </div>
+
+        <!-- Place Order Button -->
+        <button id="place-order-btn" class="place-order-btn" disabled>Կատարել Պատվեր</button>
+    </div>
+
+    <!-- Message Box for alerts -->
+    <div id="message-box" class="message-box"></div>
+
+    <script>
+        // Initialize Telegram Web App
+        const TelegramWebApp = window.Telegram.WebApp;
+        if (TelegramWebApp) {
+            TelegramWebApp.ready();
+            TelegramWebApp.expand(); // Expand the Mini App to full screen
+        } else {
+            console.warn("Telegram Web App SDK not found. Running in standalone mode.");
+        }
+
+        const menuItems = document.getElementById('menu-items');
+        const cartItemsList = document.getElementById('cart-items-list');
+        const totalPriceDisplay = document.getElementById('total-price');
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const messageBox = document.getElementById('message-box');
+
+        let cart = {}; // Stores items in the cart: { itemId: { name, price, quantity } }
+
+        // Function to show a custom message box
+        function showMessageBox(message, duration = 2000) {
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, duration);
+        }
+
+        // Function to update the cart display and total price
+        function updateCartDisplay() {
+            cartItemsList.innerHTML = ''; // Clear current cart display
+            let total = 0;
+            let hasItems = false;
+
+            for (const id in cart) {
+                const item = cart[id];
+                if (item.quantity > 0) {
+                    hasItems = true;
+                    total += item.price * item.quantity;
+
+                    const cartItemDiv = document.createElement('div');
+                    cartItemDiv.className = 'cart-item';
+                    cartItemDiv.innerHTML = `
+                        <span class="text-gray-700 font-medium">${item.name}</span>
+                        <div class="flex items-center quantity-control">
+                            <button data-id="${id}" data-action="decrease">-</button>
+                            <span class="mx-2 font-bold text-gray-800">${item.quantity}</span>
+                            <button data-id="${id}" data-action="increase">+</button>
+                        </div>
+                        <span class="text-gray-700 font-semibold">${(item.price * item.quantity).toLocaleString()} ֏</span>
+                    `;
+                    cartItemsList.appendChild(cartItemDiv);
+                }
+            }
+
+            totalPriceDisplay.textContent = `${total.toLocaleString()} ֏`;
+            placeOrderBtn.disabled = !hasItems; // Enable/disable order button based on cart content
+            emptyCartMessage.style.display = hasItems ? 'none' : 'block'; // Show/hide empty message
+        }
+
+        // Event listener for adding items to cart
+        menuItems.addEventListener('click', (event) => {
+            const button = event.target.closest('.add-to-cart-btn');
+            if (button) {
+                const id = button.dataset.id;
+                const name = button.dataset.name;
+                const price = parseInt(button.dataset.price);
+
+                if (cart[id]) {
+                    cart[id].quantity++;
+                } else {
+                    cart[id] = { name, price, quantity: 1 };
+                }
+                updateCartDisplay();
+                showMessageBox(`${name} ավելացվեց զամբյուղում։`);
+            }
+        });
+
+        // Event listener for quantity control in cart
+        cartItemsList.addEventListener('click', (event) => {
+            const button = event.target.closest('button');
+            if (button) {
+                const id = button.dataset.id;
+                const action = button.dataset.action;
+
+                if (cart[id]) {
+                    if (action === 'increase') {
+                        cart[id].quantity++;
+                    } else if (action === 'decrease') {
+                        cart[id].quantity--;
+                        if (cart[id].quantity <= 0) {
+                            delete cart[id]; // Remove item if quantity drops to 0 or less
+                        }
+                    }
+                    updateCartDisplay();
+                }
+            }
+        });
+
+        // Event listener for placing the order
+        placeOrderBtn.addEventListener('click', () => {
+            if (Object.keys(cart).length === 0) {
+                showMessageBox("Զամբյուղը դատարկ է։ Խնդրում ենք ավելացնել ապրանքներ։");
+                return;
+            }
+
+            // Prepare order data
+            const orderDetails = {
+                items: Object.values(cart).filter(item => item.quantity > 0), // Only include items with quantity > 0
+                totalPrice: parseFloat(totalPriceDisplay.textContent.replace(' ֏', '').replace(/,/g, '')),
+                // In a real app, you'd also collect user address, phone, etc.
+                // For this example, we'll simulate sending data to the bot.
+            };
+
+            // Convert orderDetails to a JSON string
+            const orderJson = JSON.stringify(orderDetails);
+
+            if (TelegramWebApp && TelegramWebApp.sendData) {
+                TelegramWebApp.sendData(orderJson);
+                showMessageBox("Պատվերը հաջողությամբ ուղարկվեց։ Շնորհակալություն։");
+                // Optionally, clear the cart after sending the order
+                cart = {};
+                updateCartDisplay();
+                // Close the Mini App after a short delay
+                setTimeout(() => {
+                    TelegramWebApp.close();
+                }, 2000);
+            } else {
+                showMessageBox("Պատվերը չկարողացավ ուղարկվել։ Telegram Web App SDK-ը հասանելի չէ։ (Սա սիմուլյացիա է)", 3000);
+                console.log("Simulated Order Data:", orderJson);
+                // In a standalone environment, you might redirect to a confirmation page or show a modal
+            }
+        });
+
+        // Initial display update
+        updateCartDisplay();
+    </script>
+</body>
+</html>
