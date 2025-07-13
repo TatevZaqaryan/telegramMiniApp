@@ -189,6 +189,50 @@
             text-decoration: none;
             cursor: pointer;
         }
+        .cart-modal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #3A3A3A;
+        }
+        .cart-modal-item:last-child {
+            border-bottom: none;
+        }
+        .cart-modal-quantity-control button {
+            background-color: #9333ea;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            margin: 0 3px;
+        }
+        .cart-modal-quantity-control span {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .place-order-modal-btn {
+            background-color: #10b981; /* Green */
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: background-color 0.2s ease-in-out;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+        .place-order-modal-btn:hover {
+            background-color: #059669; /* Darker green */
+        }
     </style>
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -374,6 +418,39 @@
             <h2 class="text-2xl font-bold text-green-600 mb-4">Պատվերը Հաստատված է։</h2>
             <p class="text-gray-700 mb-4">Շնորհակալություն Ձեր պատվերի համար։ Մենք շուտով կկապվենք Ձեզ հետ՝ մանրամասները հաստատելու համար։</p>
             <button id="ok-modal-btn" class="add-btn mt-4">Լավ</button>
+        </div>
+    </div>
+
+    <!-- Cart View Modal -->
+    <div id="cart-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="close-cart-modal-btn">&times;</span>
+            <h2 class="text-2xl font-bold text-indigo-600 mb-4">Ձեր Զամբյուղը</h2>
+            <div id="cart-modal-items-list" class="text-left mb-4">
+                <!-- Cart items will be dynamically added here -->
+                <p class="text-gray-500 text-center" id="empty-cart-modal-message">Զամբյուղը դատարկ է։</p>
+            </div>
+            <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-600">
+                <span class="text-xl font-bold text-gray-200">Ընդհանուր:</span>
+                <span class="text-2xl font-bold text-green-500" id="cart-modal-total-price">$0.00</span>
+            </div>
+            <!-- Delivery Details Section moved to modal for order confirmation -->
+            <div id="delivery-details-section" class="my-6 p-4 bg-gray-700 rounded-lg shadow-inner">
+                <h3 class="text-xl font-semibold mb-3 text-gray-200">Առաքման Տվյալներ</h3>
+                <div class="mb-3">
+                    <label for="customer-name" class="block text-gray-300 text-sm font-bold mb-1">Անուն Ազգանուն:</label>
+                    <input type="text" id="customer-name" class="shadow appearance-none border border-gray-600 rounded-lg w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-gray-800" placeholder="Մուտքագրեք Ձեր անունը">
+                </div>
+                <div class="mb-3">
+                    <label for="customer-phone" class="block text-gray-300 text-sm font-bold mb-1">Հեռախոսահամար:</label>
+                    <input type="tel" id="customer-phone" class="shadow appearance-none border border-gray-600 rounded-lg w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-gray-800" placeholder="Օրինակ՝ +374xxYYYYYY">
+                </div>
+                <div class="mb-3">
+                    <label for="delivery-address" class="block text-gray-300 text-sm font-bold mb-1">Առաքման Հասցե:</label>
+                    <textarea id="delivery-address" rows="3" class="shadow appearance-none border border-gray-600 rounded-lg w-full py-2 px-3 text-gray-900 leading-tight focus:outline-none focus:shadow-outline bg-gray-800" placeholder="Մուտքագրեք Ձեր հասցեն"></textarea>
+                </div>
+            </div>
+            <button id="place-order-modal-btn" class="place-order-modal-btn" disabled>Կատարել Պատվեր</button>
         </div>
     </div>
 
