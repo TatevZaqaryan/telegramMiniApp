@@ -53,9 +53,9 @@ function loadCartFromStorage() {
 }
 
 // Ֆունկցիա՝ ենթատեսակների մոդալը ցուցադրելու համար
-function showSubtypeModal(itemId, itemName, iconClass, subtypes) {
-    selectedItem = { id: itemId, name: itemName, icon: iconClass, subtypes: JSON.parse(subtypes) };
-    subtypeModalTitle.innerHTML = `<i class="${iconClass} mr-2"></i>Ընտրեք ${itemName}`;
+function showSubtypeModal(itemId, itemName, imageUrl, subtypes) {
+    selectedItem = { id: itemId, name: itemName, image: imageUrl, subtypes: JSON.parse(subtypes) };
+    subtypeModalTitle.innerHTML = `<img src="${imageUrl}" class="item-image mr-2 inline-block" alt="${itemName}"> Ընտրեք ${itemName}`;
     subtypeModalList.innerHTML = '';
 
     selectedItem.subtypes.forEach(subtype => {
@@ -63,7 +63,7 @@ function showSubtypeModal(itemId, itemName, iconClass, subtypes) {
         subtypeDiv.className = 'subtype-item flex justify-between items-center mb-2 p-2 border rounded-md';
         subtypeDiv.innerHTML = `
             <div class="flex items-center">
-                <i class="${iconClass} text-lg mr-2"></i>
+                <img src="${imageUrl}" class="item-image mr-2" alt="${subtype.name}">
                 <span class="text-gray-600">${subtype.name}</span>
             </div>
             <div class="flex items-center">
@@ -84,9 +84,9 @@ menuItems.addEventListener('click', (event) => {
         const card = button.closest('.item-card');
         const id = card.dataset.id;
         const name = card.dataset.name;
-        const icon = card.dataset.icon;
+        const image = card.dataset.image;
         const subtypes = card.dataset.subtypes;
-        showSubtypeModal(id, name, icon, subtypes);
+        showSubtypeModal(id, name, image, subtypes);
     }
 });
 
@@ -240,4 +240,4 @@ if (typeof placeOrderModalBtn !== 'undefined' && placeOrderModalBtn !== null) {
 }
 
 // Սկզբնական ցուցադրման թարմացում
-updateCartDisplay(cart); 
+updateCartDisplay(cart);

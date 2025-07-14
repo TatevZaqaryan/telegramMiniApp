@@ -6,7 +6,6 @@
     <title>Durger King Bot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         button:disabled {
             opacity: 0.5;
@@ -51,6 +50,12 @@
         .subtype-item:hover {
             background-color: #f3f4f6;
         }
+        .item-image, .category-image {
+            width: 24px;
+            height: 24px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans">
@@ -66,13 +71,13 @@
             <div class="category-section">
                 <div class="category-card">
                     <div class="flex items-center">
-                        <i class="fas fa-utensils text-2xl mr-2"></i>
+                        <img src="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg" class="category-image mr-2" alt="Main Dishes">
                         <h2 class="text-xl font-bold">Հիմնական Ուտեստներ</h2>
                     </div>
                 </div>
                 <div class="category-items grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-2">
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="burger" data-name="Burger" data-icon="fas fa-hamburger" data-subtypes='[{"name":"Classic Burger","price":4.99},{"name":"Cheeseburger","price":5.49},{"name":"Double Burger","price":6.99},{"name":"Veggie Burger","price":4.99},{"name":"BBQ Bacon Burger","price":6.49}]'>
-                        <i class="fas fa-hamburger text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="burger" data-name="Burger" data-image="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg" data-subtypes='[{"name":"Classic Burger","price":4.99},{"name":"Cheeseburger","price":5.49},{"name":"Double Burger","price":6.99},{"name":"Veggie Burger","price":4.99},{"name":"BBQ Bacon Burger","price":6.49}]'>
+                        <img src="https://images.pexels.com/photos/70497/pexels-photo-70497.jpeg" class="item-image mb-2" alt="Burger">
                         <h3 class="text-sm font-semibold">Burger</h3>
                         <p class="text-gray-600 text-xs">from $4.99</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -82,8 +87,8 @@
                             <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                         </div>
                     </div>
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="fries" data-name="Fries" data-icon="fas fa-french-fries" data-subtypes='[{"name":"Regular Fries","price":1.49},{"name":"Cheese Fries","price":2.49},{"name":"Truffle Fries","price":3.49}]'>
-                        <i class="fas fa-french-fries text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="fries" data-name="Fries" data-image="https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg" data-subtypes='[{"name":"Regular Fries","price":1.49},{"name":"Cheese Fries","price":2.49},{"name":"Truffle Fries","price":3.49}]'>
+                        <img src="https://images.pexels.com/photos/1583884/pexels-photo-1583884.jpeg" class="item-image mb-2" alt="Fries">
                         <h3 class="text-sm font-semibold">Fries</h3>
                         <p class="text-gray-600 text-xs">from $1.49</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -93,8 +98,8 @@
                             <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                         </div>
                     </div>
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="hotdog" data-name="Hotdog" data-icon="fas fa-hotdog" data-subtypes='[{"name":"Classic Hotdog","price":3.49},{"name":"Chili Dog","price":4.49},{"name":"Cheese Dog","price":4.29}]'>
-                        <i class="fas fa-hotdog text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="hotdog" data-name="Hotdog" data-image="https://images.pexels.com/photos/4676408/pexels-photo-4676408.jpeg" data-subtypes='[{"name":"Classic Hotdog","price":3.49},{"name":"Chili Dog","price":4.49},{"name":"Cheese Dog","price":4.29}]'>
+                        <img src="https://images.pexels.com/photos/4676408/pexels-photo-4676408.jpeg" class="item-image mb-2" alt="Hotdog">
                         <h3 class="text-sm font-semibold">Hotdog</h3>
                         <p class="text-gray-600 text-xs">from $3.49</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -104,8 +109,8 @@
                             <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                         </div>
                     </div>
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="taco" data-name="Taco" data-icon="fas fa-taco" data-subtypes='[{"name":"Beef Taco","price":3.99},{"name":"Chicken Taco","price":3.99},{"name":"Fish Taco","price":4.29}]'>
-                        <i class="fas fa-taco text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="taco" data-name="Taco" data-image="https://images.pexels.com/photos/4958649/pexels-photo-4958649.jpeg" data-subtypes='[{"name":"Beef Taco","price":3.99},{"name":"Chicken Taco","price":3.99},{"name":"Fish Taco","price":4.29}]'>
+                        <img src="https://images.pexels.com/photos/4958649/pexels-photo-4958649.jpeg" class="item-image mb-2" alt="Taco">
                         <h3 class="text-sm font-semibold">Taco</h3>
                         <p class="text-gray-600 text-xs">from $3.99</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -115,8 +120,8 @@
                             <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                         </div>
                     </div>
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="pizza" data-name="Pizza" data-icon="fas fa-pizza-slice" data-subtypes='[{"name":"Margherita","price":7.99},{"name":"Pepperoni","price":8.99},{"name":"Veggie","price":7.49},{"name":"Four Cheese","price":8.49},{"name":"Supreme","price":9.99}]'>
-                        <i class="fas fa-pizza-slice text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="pizza" data-name="Pizza" data-image="https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg" data-subtypes='[{"name":"Margherita","price":7.99},{"name":"Pepperoni","price":8.99},{"name":"Veggie","price":7.49},{"name":"Four Cheese","price":8.49},{"name":"Supreme","price":9.99}]'>
+                        <img src="https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg" class="item-image mb-2" alt="Pizza">
                         <h3 class="text-sm font-semibold">Pizza</h3>
                         <p class="text-gray-600 text-xs">from $7.49</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -132,13 +137,13 @@
             <div class="category-section">
                 <div class="category-card">
                     <div class="flex items-center">
-                        <i class="fas fa-glass-martini text-2xl mr-2"></i>
+                        <img src="https://images.pexels.com/photos/438966/pexels-photo-438966.jpeg" class="category-image mr-2" alt="Drinks">
                         <h2 class="text-xl font-bold">Խմիչքներ</h2>
                     </div>
                 </div>
                 <div class="category-items grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-2">
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="coke" data-name="Coke" data-icon="fas fa-wine-bottle" data-subtypes='[{"name":"Regular Coke","price":1.49},{"name":"Diet Coke","price":1.49},{"name":"Coke Zero","price":1.49}]'>
-                        <i class="fas fa-wine-bottle text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="coke" data-name="Coke" data-image="https://images.pexels.com/photos/438966/pexels-photo-438966.jpeg" data-subtypes='[{"name":"Regular Coke","price":1.49},{"name":"Diet Coke","price":1.49},{"name":"Coke Zero","price":1.49}]'>
+                        <img src="https://images.pexels.com/photos/438966/pexels-photo-438966.jpeg" class="item-image mb-2" alt="Coke">
                         <h3 class="text-sm font-semibold">Coke</h3>
                         <p class="text-gray-600 text-xs">from $1.49</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -154,13 +159,13 @@
             <div class="category-section">
                 <div class="category-card">
                     <div class="flex items-center">
-                        <i class="fas fa-cake-candles text-2xl mr-2"></i>
+                        <img src="https://images.pexels.com/photos/205961/pexels-photo-205961.jpeg" class="category-image mr-2" alt="Desserts">
                         <h2 class="text-xl font-bold">Դեսերտներ</h2>
                     </div>
                 </div>
                 <div class="category-items grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-2">
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="donut" data-name="Donut" data-icon="fas fa-donut" data-subtypes='[{"name":"Glazed Donut","price":1.49},{"name":"Chocolate Donut","price":1.99},{"name":"Strawberry Donut","price":1.99},{"name":"Boston Cream","price":2.29}]'>
-                        <i class="fas fa-donut text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="donut" data-name="Donut" data-image="https://images.pexels.com/photos/205961/pexels-photo-205961.jpeg" data-subtypes='[{"name":"Glazed Donut","price":1.49},{"name":"Chocolate Donut","price":1.99},{"name":"Strawberry Donut","price":1.99},{"name":"Boston Cream","price":2.29}]'>
+                        <img src="https://images.pexels.com/photos/205961/pexels-photo-205961.jpeg" class="item-image mb-2" alt="Donut">
                         <h3 class="text-sm font-semibold">Donut</h3>
                         <p class="text-gray-600 text-xs">from $1.49</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -170,8 +175,8 @@
                             <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                         </div>
                     </div>
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="cake" data-name="Cake" data-icon="fas fa-cake-candles" data-subtypes='[{"name":"Chocolate Cake","price":10.99},{"name":"Vanilla Cake","price":9.99},{"name":"Red Velvet","price":11.49}]'>
-                        <i class="fas fa-cake-candles text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="cake" data-name="Cake" data-image="https://images.pexels.com/photos/1707257/pexels-photo-1707257.jpeg" data-subtypes='[{"name":"Chocolate Cake","price":10.99},{"name":"Vanilla Cake","price":9.99},{"name":"Red Velvet","price":11.49}]'>
+                        <img src="https://images.pexels.com/photos/1707257/pexels-photo-1707257.jpeg" class="item-image mb-2" alt="Cake">
                         <h3 class="text-sm font-semibold">Cake</h3>
                         <p class="text-gray-600 text-xs">from $9.99</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -181,8 +186,8 @@
                             <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                         </div>
                     </div>
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="icecream" data-name="Icecream" data-icon="fas fa-ice-cream" data-subtypes='[{"name":"Vanilla Icecream","price":5.99},{"name":"Chocolate Icecream","price":6.49},{"name":"Strawberry Icecream","price":6.29}]'>
-                        <i class="fas fa-ice-cream text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="icecream" data-name="Icecream" data-image="https://images.pexels.com/photos/3631/summer-dessert-sweet-ice-cream.jpg" data-subtypes='[{"name":"Vanilla Icecream","price":5.99},{"name":"Chocolate Icecream","price":6.49},{"name":"Strawberry Icecream","price":6.29}]'>
+                        <img src="https://images.pexels.com/photos/3631/summer-dessert-sweet-ice-cream.jpg" class="item-image mb-2" alt="Icecream">
                         <h3 class="text-sm font-semibold">Icecream</h3>
                         <p class="text-gray-600 text-xs">from $5.99</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -192,8 +197,8 @@
                             <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                         </div>
                     </div>
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="cookie" data-name="Cookie" data-icon="fas fa-cookie" data-subtypes='[{"name":"Chocolate Chip","price":3.99},{"name":"Oatmeal Raisin","price":3.49},{"name":"Sugar Cookie","price":3.29}]'>
-                        <i class="fas fa-cookie text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="cookie" data-name="Cookie" data-image="https://images.pexels.com/photos/230325/pexels-photo-230325.jpeg" data-subtypes='[{"name":"Chocolate Chip","price":3.99},{"name":"Oatmeal Raisin","price":3.49},{"name":"Sugar Cookie","price":3.29}]'>
+                        <img src="https://images.pexels.com/photos/230325/pexels-photo-230325.jpeg" class="item-image mb-2" alt="Cookie">
                         <h3 class="text-sm font-semibold">Cookie</h3>
                         <p class="text-gray-600 text-xs">from $3.29</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -203,8 +208,8 @@
                             <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                         </div>
                     </div>
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="flan" data-name="Flan" data-icon="fas fa-pudding" data-subtypes='[{"name":"Classic Flan","price":7.99},{"name":"Caramel Flan","price":8.49},{"name":"Coconut Flan","price":8.29}]'>
-                        <i class="fas fa-pudding text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="flan" data-name="Flan" data-image="https://images.pexels.com/photos/3984408/pexels-photo-3984408.jpeg" data-subtypes='[{"name":"Classic Flan","price":7.99},{"name":"Caramel Flan","price":8.49},{"name":"Coconut Flan","price":8.29}]'>
+                        <img src="https://images.pexels.com/photos/3984408/pexels-photo-3984408.jpeg" class="item-image mb-2" alt="Flan">
                         <h3 class="text-sm font-semibold">Flan</h3>
                         <p class="text-gray-600 text-xs">from $7.99</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
@@ -214,8 +219,8 @@
                             <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                         </div>
                     </div>
-                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="popcorn" data-name="Popcorn" data-icon="fas fa-popcorn" data-subtypes='[{"name":"Butter Popcorn","price":1.99},{"name":"Caramel Popcorn","price":2.49},{"name":"Cheese Popcorn","price":2.29}]'>
-                        <i class="fas fa-popcorn text-2xl mb-2"></i>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="popcorn" data-name="Popcorn" data-image="https://images.pexels.com/photos/33129/pop-corn-popcorn-snack-corn.jpg" data-subtypes='[{"name":"Butter Popcorn","price":1.99},{"name":"Caramel Popcorn","price":2.49},{"name":"Cheese Popcorn","price":2.29}]'>
+                        <img src="https://images.pexels.com/photos/33129/pop-corn-popcorn-snack-corn.jpg" class="item-image mb-2" alt="Popcorn">
                         <h3 class="text-sm font-semibold">Popcorn</h3>
                         <p class="text-gray-600 text-xs">from $1.99</p>
                         <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
