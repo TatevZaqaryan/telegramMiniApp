@@ -6,16 +6,50 @@
     <title>Durger King Bot</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        .item-card {
+        .item-card, .category-card {
             transition: all 0.2s ease-in-out;
         }
-        .item-card:hover {
-            transform: scale(1.02);
+        .item-card:hover, .category-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .category-section {
+            margin-bottom: 2rem;
+        }
+        .category-card {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .item-card {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        #subtype-modal {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            transform: translateY(-10px);
+        }
+        #subtype-modal.hidden {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        .subtype-item:hover {
+            background-color: #f3f4f6;
         }
     </style>
 </head>
@@ -27,131 +61,185 @@
     </header>
 
     <main class="p-4">
-        <div id="menu-items" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="burger" data-name="Burger" data-price="4.99">
-                <h3 class="text-lg font-semibold">Burger</h3>
-                <p class="text-gray-600">$4.99</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+        <div id="menu-items">
+            <!-- Հիմնական Ուտեստներ -->
+            <div class="category-section">
+                <div class="category-card">
+                    <div class="flex items-center">
+                        <i class="fas fa-utensils text-2xl mr-2"></i>
+                        <h2 class="text-xl font-bold">Հիմնական Ուտեստներ</h2>
+                    </div>
+                </div>
+                <div class="category-items grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-2">
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="burger" data-name="Burger" data-icon="fas fa-hamburger" data-subtypes='[{"name":"Classic Burger","price":4.99},{"name":"Cheeseburger","price":5.49},{"name":"Double Burger","price":6.99},{"name":"Veggie Burger","price":4.99},{"name":"BBQ Bacon Burger","price":6.49}]'>
+                        <i class="fas fa-hamburger text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Burger</h3>
+                        <p class="text-gray-600 text-xs">from $4.99</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="fries" data-name="Fries" data-icon="fas fa-french-fries" data-subtypes='[{"name":"Regular Fries","price":1.49},{"name":"Cheese Fries","price":2.49},{"name":"Truffle Fries","price":3.49}]'>
+                        <i class="fas fa-french-fries text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Fries</h3>
+                        <p class="text-gray-600 text-xs">from $1.49</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="hotdog" data-name="Hotdog" data-icon="fas fa-hotdog" data-subtypes='[{"name":"Classic Hotdog","price":3.49},{"name":"Chili Dog","price":4.49},{"name":"Cheese Dog","price":4.29}]'>
+                        <i class="fas fa-hotdog text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Hotdog</h3>
+                        <p class="text-gray-600 text-xs">from $3.49</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="taco" data-name="Taco" data-icon="fas fa-taco" data-subtypes='[{"name":"Beef Taco","price":3.99},{"name":"Chicken Taco","price":3.99},{"name":"Fish Taco","price":4.29}]'>
+                        <i class="fas fa-taco text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Taco</h3>
+                        <p class="text-gray-600 text-xs">from $3.99</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="pizza" data-name="Pizza" data-icon="fas fa-pizza-slice" data-subtypes='[{"name":"Margherita","price":7.99},{"name":"Pepperoni","price":8.99},{"name":"Veggie","price":7.49},{"name":"Four Cheese","price":8.49},{"name":"Supreme","price":9.99}]'>
+                        <i class="fas fa-pizza-slice text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Pizza</h3>
+                        <p class="text-gray-600 text-xs">from $7.49</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="fries" data-name="Fries" data-price="1.49">
-                <h3 class="text-lg font-semibold">Fries</h3>
-                <p class="text-gray-600">$1.49</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+            <!-- Խմիչքներ -->
+            <div class="category-section">
+                <div class="category-card">
+                    <div class="flex items-center">
+                        <i class="fas fa-glass-martini text-2xl mr-2"></i>
+                        <h2 class="text-xl font-bold">Խմիչքներ</h2>
+                    </div>
+                </div>
+                <div class="category-items grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-2">
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="coke" data-name="Coke" data-icon="fas fa-wine-bottle" data-subtypes='[{"name":"Regular Coke","price":1.49},{"name":"Diet Coke","price":1.49},{"name":"Coke Zero","price":1.49}]'>
+                        <i class="fas fa-wine-bottle text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Coke</h3>
+                        <p class="text-gray-600 text-xs">from $1.49</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="hotdog" data-name="Hotdog" data-price="3.49">
-                <h3 class="text-lg font-semibold">Hotdog</h3>
-                <p class="text-gray-600">$3.49</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+            <!-- Դեսերտներ -->
+            <div class="category-section">
+                <div class="category-card">
+                    <div class="flex items-center">
+                        <i class="fas fa-cake-candles text-2xl mr-2"></i>
+                        <h2 class="text-xl font-bold">Դեսերտներ</h2>
+                    </div>
                 </div>
-            </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="taco" data-name="Taco" data-price="3.99">
-                <h3 class="text-lg font-semibold">Taco</h3>
-                <p class="text-gray-600">$3.99</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
-                </div>
-            </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="pizza" data-name="Pizza" data-price="7.99">
-                <h3 class="text-lg font-semibold">Pizza</h3>
-                <p class="text-gray-600">$7.99</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
-                </div>
-            </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="donut" data-name="Donut" data-price="1.49">
-                <h3 class="text-lg font-semibold">Donut</h3>
-                <p class="text-gray-600">$1.49</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
-                </div>
-            </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="popcorn" data-name="Popcorn" data-price="1.99">
-                <h3 class="text-lg font-semibold">Popcorn</h3>
-                <p class="text-gray-600">$1.99</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
-                </div>
-            </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="coke" data-name="Coke" data-price="1.49">
-                <h3 class="text-lg font-semibold">Coke</h3>
-                <p class="text-gray-600">$1.49</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
-                </div>
-            </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="cake" data-name="Cake" data-price="10.99">
-                <h3 class="text-lg font-semibold">Cake</h3>
-                <p class="text-gray-600">$10.99</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
-                </div>
-            </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="icecream" data-name="Icecream" data-price="5.99">
-                <h3 class="text-lg font-semibold">Icecream</h3>
-                <p class="text-gray-600">$5.99</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
-                </div>
-            </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="cookie" data-name="Cookie" data-price="3.99">
-                <h3 class="text-lg font-semibold">Cookie</h3>
-                <p class="text-gray-600">$3.99</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
-                </div>
-            </div>
-            <div class="item-card bg-white p-4 rounded-lg shadow-md" data-id="flan" data-name="Flan" data-price="7.99">
-                <h3 class="text-lg font-semibold">Flan</h3>
-                <p class="text-gray-600">$7.99</p>
-                <button class="add-btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">ADD</button>
-                <div class="quantity-control flex items-center hidden">
-                    <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
-                    <span class="quantity-display mx-2">0</span>
-                    <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                <div class="category-items grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 mt-2">
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="donut" data-name="Donut" data-icon="fas fa-donut" data-subtypes='[{"name":"Glazed Donut","price":1.49},{"name":"Chocolate Donut","price":1.99},{"name":"Strawberry Donut","price":1.99},{"name":"Boston Cream","price":2.29}]'>
+                        <i class="fas fa-donut text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Donut</h3>
+                        <p class="text-gray-600 text-xs">from $1.49</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="cake" data-name="Cake" data-icon="fas fa-cake-candles" data-subtypes='[{"name":"Chocolate Cake","price":10.99},{"name":"Vanilla Cake","price":9.99},{"name":"Red Velvet","price":11.49}]'>
+                        <i class="fas fa-cake-candles text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Cake</h3>
+                        <p class="text-gray-600 text-xs">from $9.99</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="icecream" data-name="Icecream" data-icon="fas fa-ice-cream" data-subtypes='[{"name":"Vanilla Icecream","price":5.99},{"name":"Chocolate Icecream","price":6.49},{"name":"Strawberry Icecream","price":6.29}]'>
+                        <i class="fas fa-ice-cream text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Icecream</h3>
+                        <p class="text-gray-600 text-xs">from $5.99</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="cookie" data-name="Cookie" data-icon="fas fa-cookie" data-subtypes='[{"name":"Chocolate Chip","price":3.99},{"name":"Oatmeal Raisin","price":3.49},{"name":"Sugar Cookie","price":3.29}]'>
+                        <i class="fas fa-cookie text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Cookie</h3>
+                        <p class="text-gray-600 text-xs">from $3.29</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="flan" data-name="Flan" data-icon="fas fa-pudding" data-subtypes='[{"name":"Classic Flan","price":7.99},{"name":"Caramel Flan","price":8.49},{"name":"Coconut Flan","price":8.29}]'>
+                        <i class="fas fa-pudding text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Flan</h3>
+                        <p class="text-gray-600 text-xs">from $7.99</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
+                    <div class="item-card bg-white p-3 rounded-lg shadow-md" data-id="popcorn" data-name="Popcorn" data-icon="fas fa-popcorn" data-subtypes='[{"name":"Butter Popcorn","price":1.99},{"name":"Caramel Popcorn","price":2.49},{"name":"Cheese Popcorn","price":2.29}]'>
+                        <i class="fas fa-popcorn text-2xl mb-2"></i>
+                        <h3 class="text-sm font-semibold">Popcorn</h3>
+                        <p class="text-gray-600 text-xs">from $1.99</p>
+                        <button class="select-btn bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 text-sm">Ընտրել</button>
+                        <div class="quantity-control flex items-center hidden mt-2">
+                            <button data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
+                            <span class="quantity-display mx-2 text-sm">0</span>
+                            <button data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
     <div id="message-box" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-md hidden"></div>
+
+    <div id="subtype-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+            <button id="close-subtype-modal-btn" class="text-gray-500 float-right">×</button>
+            <h2 id="subtype-modal-title" class="text-xl font-bold mb-4"></h2>
+            <div id="subtype-modal-list" class="mb-4"></div>
+            <button id="add-subtype-btn" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full">Ավելացնել Զամբյուղ</button>
+        </div>
+    </div>
 
     <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
         <div class="bg-white p-6 rounded-lg max-w-md w-full">

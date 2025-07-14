@@ -45,16 +45,26 @@ function updateCartDisplay(cart) {
 
     document.querySelectorAll('.item-card').forEach(card => {
         const itemId = card.dataset.id;
-        const addBtn = card.querySelector('.add-btn');
+        const addBtn = card.querySelector('.select-btn');
         const quantityControl = card.querySelector('.quantity-control');
         const quantityDisplay = card.querySelector('.quantity-display');
+        const subtypes = JSON.parse(card.dataset.subtypes);
+        let itemQuantity = 0;
 
-        if (cart[itemId] && cart[itemId].quantity > 0) {
+        // Հաշվել ընդհանուր քանակը բոլոր ենթատեսակների համար
+        subtypes.forEach(subtype => {
+            const uniqueId = `${itemId}_${subtype.name}`;
+            if (cart[uniqueId] && cart[uniqueId].quantity > 0) {
+                itemQuantity += cart[uniqueId].quantity;
+                totalItemsInCart += cart[uniqueId].quantity;
+                totalCartPrice += cart[uniqueId].price * cart[uniqueId].quantity;
+            }
+        });
+
+        if (itemQuantity > 0) {
             addBtn.classList.add('hidden');
             quantityControl.classList.remove('hidden');
-            quantityDisplay.textContent = cart[itemId].quantity;
-            totalItemsInCart += cart[itemId].quantity;
-            totalCartPrice += cart[itemId].price * cart[itemId].quantity;
+            quantityDisplay.textContent = itemQuantity;
         } else {
             addBtn.classList.remove('hidden');
             quantityControl.classList.add('hidden');
@@ -93,13 +103,13 @@ function renderCartItemsInModal(cart) {
             const cartItemDiv = document.createElement('div');
             cartItemDiv.className = 'cart-modal-item flex justify-between items-center mb-2';
             cartItemDiv.innerHTML = `
-                <span class="text-gray-300 font-medium">${item.name}</span>
+                <span class="text-gray-600 font-medium">${item.name}</span>
                 <div class="flex items-center cart-modal-quantity-control">
                     <button data-id="${id}" data-action="decrease" class="bg-gray-300 px-2 py-1 rounded">-</button>
                     <span class="mx-2">${item.quantity}</span>
                     <button data-id="${id}" data-action="increase" class="bg-gray-300 px-2 py-1 rounded">+</button>
                 </div>
-                <span class="text-gray-300 font-semibold">$${(item.price * item.quantity).toFixed(2)}</span>
+                <span class="text-gray-600 font-semibold">$${(item.price * item.quantity).toFixed(2)}</span>
             `;
             cartModalItemsList.appendChild(cartItemDiv);
         }

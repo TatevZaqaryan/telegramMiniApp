@@ -3,12 +3,20 @@
 console.log("main.js script started.");
 
 // Գլոբալ փոփոխական՝ զամբյուղի համար
-let cart = loadCartFromStorage(); // Վերականգնում ենք զամբյուղը localStorage-ից
-window.cart = cart; // Դարձնում ենք cart-ը գլոբալ, որպեսզի ui.js-ը կարողանա մուտք գործել
+let cart = loadCartFromStorage();
+window.cart = cart;
+
+// Գլոբալ փոփոխական՝ ընտրված ապրանքի համար
+let selectedItem = null;
 
 // Ստանում ենք անհրաժեշտ DOM էլեմենտները
 const menuItems = document.getElementById('menu-items');
 const cancelButton = document.getElementById('cancel-button');
+const subtypeModal = document.getElementById('subtype-modal');
+const subtypeModalTitle = document.getElementById('subtype-modal-title');
+const subtypeModalList = document.getElementById('subtype-modal-list');
+const closeSubtypeModalBtn = document.getElementById('close-subtype-modal-btn');
+const addSubtypeBtn = document.getElementById('add-subtype-btn');
 
 // Ինիցիալիզացնում ենք Telegram Web App SDK-ը
 const TelegramWebApp = window.Telegram.WebApp;
@@ -44,51 +52,101 @@ function loadCartFromStorage() {
     }
 }
 
-// Իրադարձությունների լսիչ՝ զամբյուղում ապրանքներ ավելացնելու համար
+// Ֆունկցիա՝ ենթատեսակների մոդալը ցուցադրելու համար
+function showSubtypeModal(itemId, itemName, iconClass, subtypes) {
+    selectedItem = { id: itemId, name: itemName, icon: iconClass, subtypes: JSON.parse(subtypes) };
+    subtypeModalTitle.innerHTML = `<i class="${iconClass} mr-2"></i>Ընտրեք ${itemName}`;
+    subtypeModalList.innerHTML = '';
+
+    selectedItem.subtypes.forEach(subtype => {
+        const subtypeDiv = document.createElement('div');
+        subtypeDiv.className = 'subtype-item flex justify-between items-center mb-2 p-2 border rounded-md';
+        subtypeDiv.innerHTML = `
+            <div class="flex items-center">
+                <i class="${iconClass} text-lg mr-2"></i>
+                <span class="text-gray-600">${subtype.name}</span>
+            </div>
+            <div class="flex items-center">
+                <input type="radio" name="subtype" value="${subtype.name}" data-price="${subtype.price}" class="mr-2">
+                <span class="text-gray-600">$${subtype.price.toFixed(2)}</span>
+            </div>
+        `;
+        subtypeModalList.appendChild(subtypeDiv);
+    });
+
+    subtypeModal.classList.remove('hidden');
+}
+
+// Իրադարձությունների լսիչ՝ ընտրել կոճակի համար
 menuItems.addEventListener('click', (event) => {
-    const button = event.target.closest('.add-btn');
+    const button = event.target.closest('.select-btn');
     if (button) {
         const card = button.closest('.item-card');
         const id = card.dataset.id;
         const name = card.dataset.name;
-        const price = parseFloat(card.dataset.price);
-
-        if (cart[id]) {
-            cart[id].quantity++;
-        } else {
-            cart[id] = { name, price, quantity: 1 };
-        }
-        saveCartToStorage(); // Պահպանում ենք զամբյուղը
-        updateCartDisplay(cart);
-        showMessageBox(`${name} ավելացվեց զամբյուղում։`);
+        const icon = card.dataset.icon;
+        const subtypes = card.dataset.subtypes;
+        showSubtypeModal(id, name, icon, subtypes);
     }
 });
 
-// Իրադարձությունների լսիչ՝ զամբյուղում քանակը կառավարելու համար (հիմնական էջի քարտերի վրա)
+// Իրադարձությունների լսիչ՝ ենթատեսակ ավելացնելու համար
+addSubtypeBtn.addEventListener('click', () => {
+    const selectedSubtype = subtypeModalList.querySelector('input[name="subtype"]:checked');
+    if (!selectedSubtype) {
+        showMessageBox('Խնդրում ենք ընտրել ենթատեսակ։');
+        return;
+    }
+
+    const subtype = selectedSubtype.value;
+    const price = parseFloat(selectedSubtype.dataset.price);
+    const uniqueId = `${selectedItem.id}_${subtype}`;
+    const name = `${selectedItem.name} (${subtype})`;
+
+    if (cart[uniqueId]) {
+        cart[uniqueId].quantity++;
+    } else {
+        cart[uniqueId] = { name, price, quantity: 1, subtype };
+    }
+    saveCartToStorage();
+    updateCartDisplay(cart);
+    showMessageBox(`${name} ավելացվեց զամբյուղում։`);
+    subtypeModal.classList.add('hidden');
+});
+
+// Իրադարձությունների լսիչ՝ ենթատեսակի մոդալը փակելու համար
+closeSubtypeModalBtn.addEventListener('click', () => {
+    subtypeModal.classList.add('hidden');
+});
+
+// Իրադարձությունների լսիչ՝ զամբյուղում քանակը կառավարելու համար
 menuItems.addEventListener('click', (event) => {
     const button = event.target.closest('.quantity-control button');
     if (button) {
         const card = button.closest('.item-card');
         const id = card.dataset.id;
+        const subtypes = JSON.parse(card.dataset.subtypes);
+        const subtype = subtypes[0].name; // Օգտագործում ենք առաջին ենթատեսակը որպես լռելյայն
+        const uniqueId = `${id}_${subtype}`;
         const action = button.dataset.action;
-        handleCartQuantityChange(id, action);
+        handleCartQuantityChange(uniqueId, action);
     }
 });
 
 // Ֆունկցիա՝ զամբյուղի քանակը փոփոխելու համար
-function handleCartQuantityChange(id, action) {
-    if (cart[id]) {
+function handleCartQuantityChange(uniqueId, action) {
+    if (cart[uniqueId]) {
         if (action === 'increase') {
-            cart[id].quantity++;
-            showMessageBox(`${cart[id].name} քանակը ավելացավ։`);
+            cart[uniqueId].quantity++;
+            showMessageBox(`${cart[uniqueId].name} քանակը ավելացավ։`);
         } else if (action === 'decrease') {
-            cart[id].quantity--;
-            if (cart[id].quantity <= 0) {
-                showMessageBox(`${cart[id].name} հեռացվեց զամբյուղից։`);
-                delete cart[id];
+            cart[uniqueId].quantity--;
+            if (cart[uniqueId].quantity <= 0) {
+                showMessageBox(`${cart[uniqueId].name} հեռացվեց զամբյուղից։`);
+                delete cart[uniqueId];
             }
         }
-        saveCartToStorage(); // Պահպանում ենք զամբյուղը
+        saveCartToStorage();
         updateCartDisplay(cart);
     }
 }
@@ -118,7 +176,6 @@ if (typeof placeOrderModalBtn !== 'undefined' && placeOrderModalBtn !== null) {
         const customerPhone = customerPhoneInput.value.trim();
         const deliveryAddress = deliveryAddressInput.value.trim();
 
-        // Վալիդացիայի կանոններ
         if (!customerName || customerName.length < 2) {
             showMessageBox("Անունը պետք է պարունակի առնվազն 2 նիշ։");
             return;
@@ -153,7 +210,7 @@ if (typeof placeOrderModalBtn !== 'undefined' && placeOrderModalBtn !== null) {
                 hideCartModal();
                 showConfirmationModal();
                 cart = {};
-                saveCartToStorage(); // Պահպանում ենք դատարկ զամբյուղը
+                saveCartToStorage();
                 customerNameInput.value = '';
                 customerPhoneInput.value = '';
                 deliveryAddressInput.value = '';
@@ -183,4 +240,4 @@ if (typeof placeOrderModalBtn !== 'undefined' && placeOrderModalBtn !== null) {
 }
 
 // Սկզբնական ցուցադրման թարմացում
-updateCartDisplay(cart);
+updateCartDisplay(cart); 
